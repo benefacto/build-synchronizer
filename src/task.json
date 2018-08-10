@@ -1,0 +1,23 @@
+{
+    "$schema": "https://raw.githubusercontent.com/AArnott/vso-agent-tasks/9b41d803a/tasks.schema.json",
+    "id": "64fd87be-17b3-4c79-9178-b2b456ccf8af",
+    "name": "TamaracBuildSynchronizer",
+    "friendlyName": "Tamarac Build Synchronizer",
+    "description": "",
+    "helpMarkDown": "",
+    "category": "Utility",
+    "author": "Envestnet",
+    "version": {
+        "Major": 0,
+        "Minor": 0,
+        "Patch": 0
+    },
+    "instanceNameFormat": "",
+    "groups": [
+    ],
+    "execution": {
+        "Node": {
+            "target": "index.js"
+        }
+    }
+}
