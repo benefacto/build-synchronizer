@@ -21,7 +21,7 @@ async function run() {
         
         // call some module which does external work
         if (rc1 == 0) {
-            mod.sayHello();
+            mod.creatBuildDefinition();
         }
         
         console.log('Task done! ' + rc1);
