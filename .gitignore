@@ -8,6 +8,7 @@ output/
 *.js
 *.js.map
 *.d.ts
+config.json
 
 [Tt]asks/**/*.js
 [Tt]ests/**/*.js
