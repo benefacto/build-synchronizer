@@ -1,24 +1,20 @@
-import tl = require('vsts-task-lib/task');
-import trm = require('vsts-task-lib/toolrunner');
-import mod = require('./taskmod');
+import * as tl from 'vsts-task-lib/task';
+import * as trm from 'vsts-task-lib/toolrunner';
+import * as mod from './taskmod';
 
 async function run() {
     try {
-        console.log(process.env["INPUT_SAMPLESTRING"]);
         let tool: trm.ToolRunner;
         if (process.platform == 'win32') {
             let cmdPath = tl.which('cmd');
-            tool = tl.tool(cmdPath).arg('/c').arg('echo ' + tl.getInput('samplestring', true));
+            tool = tl.tool(cmdPath).arg('/c');
         }
         else {
             let echoPath = tl.which('echo');
-            tool = tl.tool(echoPath).arg(tl.getInput('samplestring', true));
+            tool = tl.tool(echoPath);
         }
 
-        let rc1: number = await tool.exec();
-
-        console.log("new change");
-        
+        let rc1: number = await tool.exec(); 
         // call some module which does external work
         if (rc1 == 0) {
             mod.creatBuildDefinition();
