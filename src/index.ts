@@ -1,6 +1,6 @@
+import * as mod from './taskmod';
 import * as tl from 'vsts-task-lib/task';
 import * as trm from 'vsts-task-lib/toolrunner';
-import * as mod from './taskmod';
 
 async function run() {
     try {

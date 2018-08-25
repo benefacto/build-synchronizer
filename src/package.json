@@ -10,9 +10,10 @@
   "license": "ISC",
   "dependencies": {
     "@types/escape-string-regexp": "^1.0.0",
+    "@types/vso-node-api": "^4.0.0",
     "escape-string-regexp": "^1.0.5",
     "typescript": "^3.0.1",
-    "vso-node-api": "^6.3.1-preview",
+    "vso-node-api": "^5.1.2",
     "vsts-task-lib": "^2.6.0"
   },
   "devDependencies": {
