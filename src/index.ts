@@ -15,16 +15,13 @@ async function run() {
         }
 
         let rc1: number = await tool.exec(); 
-        // call some module which does external work
         if (rc1 == 0) {
-            mod.creatBuildDefinition();
+            mod.createBuildDefinitions();
         }
-        
         console.log('Task done! ' + rc1);
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message);
     }
 }
-
 run();

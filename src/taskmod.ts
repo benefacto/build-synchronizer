@@ -1,74 +1,100 @@
 import * as bApi from 'vso-node-api/BuildApi';
-import * as cApi from 'vso-node-api/coreApi';
 import * as buildInterfaces from 'vso-node-api/interfaces/BuildInterfaces';
+import * as cApi from 'vso-node-api/coreApi';
 import * as coreInterfaces from 'vso-node-api/interfaces/CoreInterfaces';
 import * as escapeStringRegexp from 'escape-string-regexp';
 import * as fs from 'fs';
 import * as tl from 'vsts-task-lib/task';
+import * as util from 'util';
+import * as vsoBaseInterfaces from 'vso-node-api/interfaces/common/VsoBaseInterfaces';
 import * as vsts from 'vso-node-api';
-import * as util from 'util'
-import { IRequestHandler } from 'vso-node-api/interfaces/common/VsoBaseInterfaces';
 
-export async function creatBuildDefinition() {
-    let collectionUrl: string = tl.getInput('tfsurl');
-    let token: string = tl.getInput('tfstoken'); 
+function untokenizeJson(branchName: string, branchPath: string, json: string) {
+    return json.replace(
+            new RegExp(
+                escapeStringRegexp(
+                    tl.getInput('branchnametoken')
+                ), 'g'), branchName)
+        .replace(
+            new RegExp(
+                escapeStringRegexp(
+                    tl.getInput('branchpathtoken')
+                ), 'g'), branchPath);
+}
 
-    let authHandler = vsts.getPersonalAccessTokenHandler(token);
-    let versionHandler = vsts.getVersionHandler('2.0');
-    let handlers: IRequestHandler[] = [ authHandler, versionHandler ];
-    let buildApi = new bApi.BuildApi(collectionUrl, handlers);
-    let coreApi = new cApi.CoreApi(collectionUrl, handlers);
+function initBuildDefinition(json: string, buildDefPath: string, project: coreInterfaces.TeamProject) {
+    let def: buildInterfaces.BuildDefinition = JSON.parse(json);
+    def.name += 'TEST';
+    def.path = buildDefPath;
+    def.project = {
+        abbreviation: project.abbreviation,
+        description: project.description,
+        id: project.id,
+        name: project.name,
+        revision: project.revision,
+        state: project.state,
+        url: project.url
+    };
+    return def;
+}
 
-    let currentProject: coreInterfaces.TeamProject = await coreApi.getProject(tl.getInput('projectid'));
-    let json: string = fs.readFileSync(tl.getInput('filepath')).toString();
-    let branches: string[];
-
-    if (tl.getInput('targetbranches').indexOf(',') ) {
-        branches = tl.getInput('targetbranches').split(',');
+function getBranchDependentPath(tfvc: boolean, branchName: string) {
+    let path: string = tfvc ? 'tfvcpath' : 'path';
+    if((branchName.toLowerCase()).indexOf('release') > -1) {
+        return tl.getInput('release' + path) + branchName;
+    }
+    else if((branchName.toLowerCase()).indexOf('main') > -1) {
+        return tl.getInput('base' + path) + branchName;
     }
     else {
-        branches = [tl.getInput('targetbranches')];
+        return tl.getInput('feature' + path) + branchName;
     }
+}
 
-    // TO-DO: Support multiple target branches
-    // branches.forEach(branchName => {
-        let branchPath: string;
-        if((branches[0].toLowerCase()).indexOf('release') > -1) {
-            branchPath = tl.getInput('releasetfvcpath') + branches[0];
-        }
-        else if((branches[0].toLowerCase()).indexOf('main') > -1) {
-            branchPath = tl.getInput('basetfvcpath') + branches[0];
-        }
-        else {
-            branchPath = tl.getInput('featuretfvcpath') + branches[0];
-        }
-        
-        // replaces all occurences of tokens with actual branch name & path
-        json = json.replace(
-                new RegExp(
-                    escapeStringRegexp(
-                        tl.getInput('branchnametoken')
-                    ), 'g'), branches[0])
-            .replace(
-                new RegExp(
-                    escapeStringRegexp(
-                        tl.getInput('branchpathtoken')
-                    ), 'g'), branchPath);
-        // TO-DO: Make sure build definition is being created in appropriate branch
-        let def: buildInterfaces.BuildDefinition = JSON.parse(json);
-        def.name += 'TEST';
-        def.project = {
-            abbreviation: currentProject.abbreviation,
-            description: currentProject.description,
-            id: currentProject.id,
-            name: currentProject.name,
-            revision: currentProject.revision,
-            state: currentProject.state,
-            url: currentProject.url
-        };
+function getFileNames() {
+    let fileNames: string[] = [tl.getInput('filepath')];
+    if(fs.lstatSync(tl.getInput('filepath')).isDirectory()) {
+        fs.readdir(tl.getInput('filepath'), (err, files) => {
+            if (err) throw err;
+            files.forEach(file => {
+                fileNames.push(file);
+            });
+          })
+    }
+    return fileNames;
+}
 
-        // TO-DO: Add try-cactch block for promise
-        let result = await buildApi.createDefinition(def, currentProject.id);
-        console.log('Result of build definition create is: ' + util.inspect(result, false, null));
-   // });
+export async function createBuildDefinitions() {
+    const handlers: vsoBaseInterfaces.IRequestHandler[] = [ 
+        vsts.getPersonalAccessTokenHandler(tl.getInput('tfstoken')), 
+        vsts.getVersionHandler(tl.getInput('tfsapiversionnumber')) 
+    ];
+    const buildApi = new bApi.BuildApi(tl.getInput('tfsurl'), handlers);
+    const coreApi = new cApi.CoreApi(tl.getInput('tfsurl'), handlers);
+    const currentProject: coreInterfaces.TeamProject = 
+        await coreApi.getProject(tl.getInput('projectid'));
+
+    let fileNames: string[] = getFileNames();
+    for(const fileName of fileNames) {
+        let json: string = fs.readFileSync(fileName).toString();
+        let branches: string[] = tl.getInput('targetbranches').indexOf(',') ? 
+            tl.getInput('targetbranches').split(',') : [tl.getInput('targetbranches')];
+
+        for(const branchName of branches) {
+            let branchPath: string = getBranchDependentPath(true, branchName);
+            let buildDefPath: string = getBranchDependentPath(false, branchName);
+            
+            json = untokenizeJson(branchName, branchPath, json);
+            let def: buildInterfaces.BuildDefinition = initBuildDefinition(
+                json, buildDefPath, currentProject);
+
+            try {
+                const result = await buildApi.createDefinition(def, currentProject.id);
+                console.log('Result of build definition create is: ' + util.inspect(result, false, null));
+            }
+            catch(e) {
+                throw e;
+            }
+        }
+    }
 }
