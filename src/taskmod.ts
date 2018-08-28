@@ -96,7 +96,7 @@ export async function syncBuildDefinitions() {
                     result = await buildApi.deleteDefinition(def.id, currentProject.id);
                 }
                 result = await buildApi.createDefinition(def, currentProject.id);
-                console.log('Result of build definition operation is: ' +
+                console.log('Result of build definition operation is: \n' +
                     inspect(result, false, null));
             }
         }

@@ -1,19 +1,96 @@
 {
     "$schema": "https://raw.githubusercontent.com/AArnott/vso-agent-tasks/9b41d803a/tasks.schema.json",
-    "id": "64fd87be-17b3-4c79-9178-b2b456ccf8af",
+    "id": "4c204bbe-9c88-4b57-ac83-d5726fa2ae54",
     "name": "TamaracBuildSynchronizer",
     "friendlyName": "Tamarac Build Synchronizer",
-    "description": "",
+    "description": "Build task to (re-)create VSTS build definitions for TFVC in TFS (2017 Update 2) from provided (directory of) tokenized JSON file(s)",
     "helpMarkDown": "",
     "category": "Utility",
     "author": "Envestnet",
     "version": {
-        "Major": 0,
+        "Major": 1,
         "Minor": 0,
         "Patch": 0
     },
     "instanceNameFormat": "",
     "groups": [
+    ],
+    "inputs": [
+        {
+            "name": "INPUT_BASEPATH",
+            "label": "Input Base Path",
+            "type": "string"
+        },
+        {
+            "name": "INPUT_BASETFVCPATH",
+            "label": "Input Base TFVC Path",
+            "type": "string"
+        },
+        {
+            "name": "INPUT_BRANCHNAMETOKEN",
+            "label": "Input Branch Name Token",
+            "type": "string"
+        },
+        {
+            "name": "INPUT_BRANCHPATHTOKEN",
+            "label": "Input Branch Path Token",
+            "type": "string"
+        },
+        {
+            "name": "INPUT_DEFNAMEPOSTFIX",
+            "label": "Input Definition Name Postfix",
+            "type": "string"
+        },
+        {
+            "name": "INPUT_FEATUREPATH",
+            "label": "Input Feature Path",
+            "type": "string"
+        },
+        {
+            "name": "INPUT_FEATURETFVCPATH",
+            "label": "Input Feature TFVC Path",
+            "type": "string"
+        },
+        {
+            "name": "INPUT_FILEPATH",
+            "label": "Input File Path",
+            "type": "filePath"
+        },
+        {
+            "name": "INPUT_PROJECTID",
+            "label": "Input Project Id",
+            "type": "string"
+        },
+        {
+            "name": "INPUT_RELEASEPATH",
+            "label": "Input Release Path",
+            "type": "string"
+        },
+        {
+            "name": "INPUT_RELEASETFVCPATH",
+            "label": "Input Release TFVC Path",
+            "type": "string"
+        },
+        {
+            "name": "INPUT_TARGETBRANCHES",
+            "label": "Input Target Branches",
+            "type": "string"
+        },
+        {
+            "name": "INPUT_TFSAPIVERSIONNUMBER",
+            "label": "Input TFS API Version Number",
+            "type": "string"
+        },
+        {
+            "name": "INPUT_TFSTOKEN",
+            "label": "Input TFS Token",
+            "type": "string"
+        },
+        {
+            "name": "INPUT_TFSURL",
+            "label": "Input TFS URL",
+            "type": "string"
+        }
     ],
     "execution": {
         "Node": {
