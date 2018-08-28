@@ -6,15 +6,15 @@ import { getInput } from 'vsts-task-lib/task';
 import { getPersonalAccessTokenHandler, getVersionHandler } from 'vso-node-api';
 import { inspect } from 'util';
 import { IRequestHandler } from 'vso-node-api/interfaces/common/VsoBaseInterfaces';
-import { lstatSync, readdir, readFileSync } from 'fs';
+import { lstatSync, readdirSync, readFileSync } from 'fs';
 import { TeamProject } from 'vso-node-api/interfaces/CoreInterfaces';
 
 function _untokenizeJson(branchName: string, branchPath: string, json: string) {
     return json.replace(new RegExp(
-            escapeStringRegexp(getInput('branchnametoken')), 'g'),
+        escapeStringRegexp(getInput('branchnametoken')), 'g'),
         branchName)
         .replace(new RegExp(
-                escapeStringRegexp(getInput('branchpathtoken')), 'g'),
+            escapeStringRegexp(getInput('branchpathtoken')), 'g'),
             branchPath);
 }
 
@@ -48,14 +48,14 @@ function _getBranchDependentPath(tfvc: boolean, branchName: string) {
 }
 
 function _getFileNames(filePath: string) {
-    let fileNames: string[] = [filePath];
+    let fileNames: string[] = [];
     if (lstatSync(filePath).isDirectory()) {
-        readdir(filePath, (err, files) => {
-            if (err) throw err;
-            files.forEach(file => {
-                fileNames.push(file);
-            });
+        readdirSync(filePath).forEach(file => {
+            fileNames.push(filePath + file);
         })
+    }
+    else {
+        fileNames = [filePath];
     }
     return fileNames;
 }
@@ -70,8 +70,8 @@ export async function syncBuildDefinitions() {
         const coreApi = new CoreApi(getInput('tfsurl'), handlers);
         const currentProject: TeamProject =
             await coreApi.getProject(getInput('projectid'));
-        
-        let fileNames: string[] = _getFileNames(getInput('filepath'));
+
+        let fileNames: string[] = _getFileNames(getInput('filepath'))!;
         let buildDefs: BuildDefinitionReference[] =
             await buildApi.getDefinitions(currentProject.id);
 
