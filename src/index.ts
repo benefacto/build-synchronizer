@@ -14,11 +14,12 @@ async function run() {
             tool = tl.tool(echoPath);
         }
 
-        let rc1: number = await tool.exec(); 
+        let rc1: number = await tool.exec();
         if (rc1 == 0) {
-            mod.createBuildDefinitions();
+            mod.createBuildDefinitions()
+                .then(res => console.log('Task completed; exited with code: ' + rc1))
+                .catch(err => tl.setResult(tl.TaskResult.Failed, err.message));
         }
-        console.log('Task done! ' + rc1);
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message);
