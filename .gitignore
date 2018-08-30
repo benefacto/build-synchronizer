@@ -9,6 +9,7 @@ output/
 *.js.map
 *.d.ts
 config.json
+!gulpfile.js
 
 [Tt]asks/**/*.js
 [Tt]ests/**/*.js

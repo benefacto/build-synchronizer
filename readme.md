@@ -84,12 +84,24 @@ Then run the build step by pressing `Ctrl+Shift+B`, and any updates will trigger
 
 ### Staging the files
 
-(WIP)
+There is a `gulpfile.js` in the `src` directory that has a `rebuild` task that can be used to create the necessary files to create the build extension package. Run the following:
+
+```bash
+gulp rebuild
+```
 
 ### Creating the VSIX package to publish
 
-(WIP)
+First, install the `tfx-cli` tools:
 
-## Build Task
+```bash
+npm install -g tfx-cli
+```
 
-(WIP)
+Then run the following from the `src` folder:
+
+```bash
+tfx extension create --output-path <your_output_path>
+```
+
+NOTE: The version specified in the [vss-extension.json](./src/vss-extension.json) will need to be incremented in order to publish to a VSTS/TFS gallery.

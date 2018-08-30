@@ -11,16 +11,16 @@ import { TeamProject } from 'vso-node-api/interfaces/CoreInterfaces';
 
 function _untokenizeJson(branchName: string, branchPath: string, json: string) {
     return json.replace(new RegExp(
-        escapeStringRegexp(getInput('branchnametoken')), 'g'),
+        escapeStringRegexp(getInput('branchnametoken', true)), 'g'),
         branchName)
         .replace(new RegExp(
-            escapeStringRegexp(getInput('branchpathtoken')), 'g'),
+            escapeStringRegexp(getInput('branchpathtoken', true)), 'g'),
             branchPath);
 }
 
 function _initBuildDefinition(json: string, buildDefPath: string, project: TeamProject) {
     let def: BuildDefinition = JSON.parse(json);
-    def.name += getInput('defnamepostfix');
+    def.name += getInput('defnamepostfix', false);
     def.path = buildDefPath;
     def.project = {
         abbreviation: project.abbreviation,
@@ -37,13 +37,13 @@ function _initBuildDefinition(json: string, buildDefPath: string, project: TeamP
 function _getBranchDependentPath(tfvc: boolean, branchName: string) {
     let path: string = tfvc ? 'tfvcpath' : 'path';
     if ((branchName.toLowerCase()).indexOf('release') > -1) {
-        return getInput('release' + path) + branchName;
+        return getInput('release' + path, true) + branchName;
     }
     else if ((branchName.toLowerCase()).indexOf('main') > -1) {
-        return getInput('base' + path) + branchName;
+        return getInput('base' + path, true) + branchName;
     }
     else {
-        return getInput('feature' + path) + branchName;
+        return getInput('feature' + path, true) + branchName;
     }
 }
 
@@ -63,22 +63,22 @@ function _getFileNames(filePath: string) {
 export async function syncBuildDefinitions() {
     try {
         const handlers: IRequestHandler[] = [
-            getPersonalAccessTokenHandler(getInput('tfstoken')),
-            getVersionHandler(getInput('tfsapiversionnumber'))
+            getPersonalAccessTokenHandler(getInput('tfstoken', true)),
+            getVersionHandler(getInput('tfsapiversionnumber', true))
         ];
-        const buildApi = new BuildApi(getInput('tfsurl'), handlers);
-        const coreApi = new CoreApi(getInput('tfsurl'), handlers);
+        const buildApi = new BuildApi(getInput('tfsurl', true), handlers);
+        const coreApi = new CoreApi(getInput('tfsurl', true), handlers);
         const currentProject: TeamProject =
-            await coreApi.getProject(getInput('projectid'));
+            await coreApi.getProject(getInput('projectid', true));
 
-        let fileNames: string[] = _getFileNames(getInput('filepath'))!;
+        let fileNames: string[] = _getFileNames(getInput('filepath', true))!;
         let buildDefs: BuildDefinitionReference[] =
             await buildApi.getDefinitions(currentProject.id);
 
         for (const fileName of fileNames) {
             let json: string = readFileSync(fileName).toString();
-            let branches: string[] = getInput('targetbranches').indexOf(',') ?
-                getInput('targetbranches').split(',') : [getInput('targetbranches')];
+            let branches: string[] = getInput('targetbranches', true).indexOf(',') ?
+                getInput('targetbranches', true).split(',') : [getInput('targetbranches', true)];
 
             for (const branchName of branches) {
                 let branchPath: string = _getBranchDependentPath(true, branchName);

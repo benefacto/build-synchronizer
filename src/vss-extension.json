@@ -1,0 +1,45 @@
+{
+    "manifestVersion": 1,
+    "id": "tamarac-wl",
+    "version": "0.1.34",
+    "name": "Tamarac Build Synchronizer",
+    "publisher": "Envestnet",
+    "description": "Build task to (re-)create VSTS build definitions for TFVC in TFS (2017 Update 2) from provided (directory of) tokenized JSON file(s)",
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "icons": {
+        "default": "images/envestnet-logo.png"
+    },
+    "categories": [
+        "Build and release"
+    ],
+    "content": {
+        "details": {
+            "path": "readme.md"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/benefacto/build-synchronizer"
+    },
+    "contributions": [
+        {
+            "id": "TamaracBuildSynchronizer",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "output/TamaracBuildSynchronizer"
+            }
+        }
+    ],
+    "files": [
+        {
+            "path": "output"
+        }
+    ]
+}
