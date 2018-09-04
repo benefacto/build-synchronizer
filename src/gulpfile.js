@@ -16,18 +16,18 @@ gulp.task('clean', function () {
     return del('output/**', { force: true });
 });
 
-gulp.task('build', function () {
+gulp.task('build', ['clean'], function () {
     return tsProject.src()
         .pipe(tsProject())
         .js.pipe(gulp.dest(tamaracBSOutputFolder));
 });
 
-gulp.task('package', function (done) {
+gulp.task('package', ['build'], function (done) {
     gulp.src(taskResources)
         .pipe(gulp.dest(tamaracBSOutputFolder));
-    gulp.src('./node_modules/**/*')
+    gulp.src(['./node_modules/**/*', 
+    // Excluding folders with # character because they will fail tfx part name validation
+    '!**/#'])
         .pipe(gulp.dest(nodeModulesOutputFolder));
     done();
 });
-
-gulp.task('rebuild', gulp.series('clean','build','package'))
