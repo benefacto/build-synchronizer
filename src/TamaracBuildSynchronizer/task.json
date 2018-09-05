@@ -1,133 +1,69 @@
 {
     "$schema": "https://raw.githubusercontent.com/AArnott/vso-agent-tasks/9b41d803a/tasks.schema.json",
-    "id": "4c204bbe-9c88-4b57-ac83-d5726fa2ae54",
-    "name": "TamaracBuildSynchronizer",
-    "friendlyName": "Tamarac Build Synchronizer",
-    "description": "Build task to (re-)create VSTS build definitions for TFVC in TFS (2017 Update 2) from provided (directory of) tokenized JSON file(s)",
-    "helpMarkDown": "",
-    "category": "Utility",
     "author": "Envestnet",
-    "version": {
-        "Major": 1,
-        "Minor": 0,
-        "Patch": 0
-    },
-    "instanceNameFormat": "Synchronize Build Definitions",
-    "groups": [
-    ],
-    "inputs": [
-        {
-            "name": "basepath",
-            "label": "Base Path",
-            "type": "string",
-            "required": true,
-            "defaultValue": "\\\\",
-            "helpMarkDown": "Path for build definitions stored in TFS that have 'main' in the branch name"
-        },
-        {
-            "name": "basetfvcpath",
-            "label": "Base TFVC Path",
-            "type": "string",
-            "required": true,
-            "helpMarkDown": "TFVC Path for build definitions stored in TFS that have 'main' in the branch name; example value: $/SomeProject/ReleaseBranches/"
-        },
-        {
-            "name": "branchnametoken",
-            "label": "Branch Name Token",
-            "type": "string",
-            "required": true,
-            "helpMarkDown": "Branch name token to replace in input JSON file"
-        },
-        {
-            "name": "branchpathtoken",
-            "label": "Branch Path Token",
-            "type": "string",
-            "required": true,
-            "helpMarkDown": "Branch TFVC path token to replace with Base TFVC Path plus Branch Name"
-        },
-        {
-            "name": "defnamepostfix",
-            "label": "Definition Name Postfix",
-            "defaultValue": "",
-            "type": "string",
-            "required": false,
-            "helpMarkDown": "Optional postfix to append to names of created build definitions"
-        },
-        {
-            "name": "featurepath",
-            "label": "Feature Path",
-            "type": "string",
-            "required": true,
-            "helpMarkDown": "Default path for build definitions stored in TFS; example value: \\\\FeatureBranches\\\\"
-        },
-        {
-            "name": "featuretfvcpath",
-            "label": "Feature TFVC Path",
-            "type": "string",
-            "required": true,
-            "helpMarkDown": "Default TFVC path; example value: $/SomeProject/FeatureBranches/"
-        },
-        {
-            "name": "filepath",
-            "label": "File Path",
-            "type": "filePath",
-            "required": true,
-            "helpMarkDown": "Directory or file to read in JSON build definitions; example values: C:/BuildDefinitions/ or C:/BuildDefinitions/Def.json"
-        },
-        {
-            "name": "projectid",
-            "label": "Project Id",
-            "type": "string",
-            "required": true,
-            "helpMarkDown": "Target TFS Project Id"
-        },
-        {
-            "name": "releasepath",
-            "label": "Release Path",
-            "type": "string",
-            "required": true,
-            "helpMarkDown": "Path for build definitions stored in TFS that have 'release' in the branch name; example value: \\\\ReleaseBranches\\\\"
-        },
-        {
-            "name": "releasetfvcpath",
-            "label": "Release TFVC Path",
-            "type": "string",
-            "required": true,
-            "helpMarkDown": "TFVC path for build definitions stored in TFS that have 'release' in the branch name; example value: \\\\ReleaseBranches\\\\"
-        },
-        {
-            "name": "targetbranches",
-            "label": "Target Branches",
-            "type": "string",
-            "required": true,
-            "helpMarkDown": "Target branch(es) to (re-)create build definitions in, comma-separated values"
-        },
-        {
-            "name": "tfsapiversionnumber",
-            "label": "TFS API Version Number",
-            "type": "string",
-            "required": true,
-            "defaultValue": "2.0",
-            "helpMarkDown": "Version of TFS API to use"
-        },
-        {
-            "name": "tfstoken",
-            "label": "TFS Token",
-            "type": "string",
-            "required": true,
-            "helpMarkDown": "TFS Personal Access Token"
-        },
-        {
-            "name": "tfsurl",
-            "label": "TFS URL",
-            "type": "string",
-            "required": true,
-            "helpMarkDown": "TFS URL; example value: https://accountName.visualstudio.com/project/"
-        }
-    ],
+    "category": "Utility",
+    "description": "Build task to (re-)create VSTS build definitions for TFVC in TFS (2017 Update 2) from provided (directory of) tokenized JSON file(s)",
     "execution": {
         "Node": {
             "target": "index.js"
         }
+    },
+    "friendlyName": "Tamarac Build Synchronizer",
+    "groups": [],
+    "helpMarkDown": "",
+    "id": "4c204bbe-9c88-4b57-ac83-d5726fa2ae54",
+    "inputs": [
+        {
+            "defaultValue": "",
+            "helpMarkDown": "Optional postfix to append to names of created build definitions",
+            "label": "Definition Name Postfix",
+            "name": "defnamepostfix",
+            "required": false,
+            "type": "string"
+        },
+        {
+            "defaultValue": "2.0",
+            "helpMarkDown": "Version of TFS API to use",
+            "label": "TFS API Version Number",
+            "name": "tfsapiversionnumber",
+            "required": true,
+            "type": "string"
+        },
+        {
+            "defaultValue": "\\\\",
+            "helpMarkDown": "Base build definition path",
+            "label": "Base Path",
+            "name": "basebuilddefinitionpath",
+            "required": true,
+            "type": "string"
+        },
+        {
+            "helpMarkDown": "Branch TFVC path token to replace with Base TFVC Path plus Branch Name",
+            "label": "Branch Path Token",
+            "name": "branchpathtoken",
+            "required": true,
+            "type": "string"
+        },
+        {
+            "helpMarkDown": "Branch name token to replace in input JSON file",
+            "label": "Branch Name Token",
+            "name": "branchnametoken",
+            "required": true,
+            "type": "string"
+        },
+        {
+            "helpMarkDown": "Directory or file to read in JSON build definitions; example values: C:/BuildDefinitions/ or C:/BuildDefinitions/Def.json",
+            "label": "File Path",
+            "name": "filepath",
+            "required": true,
+            "type": "filePath"
+        }
+    ],
+    "instanceNameFormat": "Synchronize Build Definitions",
+    "name": "TamaracBuildSynchronizer",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 0
     }
 }

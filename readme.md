@@ -25,21 +25,17 @@ Set up these two files in a `.vscode` folder at the root of the Git repository t
     "configurations": [
         {
             "env": {
-                "INPUT_BASEPATH": "\\\\",
-                "INPUT_BASETFVCPATH": "$/ProjectName/",
-                "INPUT_BRANCHNAMETOKEN": "$(branchName)",
-                "INPUT_BRANCHPATHTOKEN": "$(branchPath)",
-                "INPUT_DEFNAMEPOSTFIX": "",
-                "INPUT_FEATUREPATH": "\\\\FeatureBranches\\\\",
-                "INPUT_FEATURETFVCPATH": "$/ProjectName/FeatureBranches/",
+                "BUILD_SOURCEBRANCH": "$/ProjectName/FeatureBranches/Branch",
+                "BUILD_SOURCEBRANCHNAME": "Branch",
+                "INPUT_BASEBUILDDEFINITIONPATH": "\\\\",
+                "INPUT_BRANCHNAMETOKEN": "#(branchName)",
+                "INPUT_BRANCHPATHTOKEN": "#(branchPath)",
+                "INPUT_DEFNAMEPOSTFIX": "TEST",
                 "INPUT_FILEPATH": "C:/TokenizedBuildDefinitions/",
-                "INPUT_PROJECTID": "7a5a2370-c459-4d96-bf34-538ff7174aba",
-                "INPUT_RELEASEPATH": "\\\\ReleaseBranches\\\\",
-                "INPUT_RELEASETFVCPATH": "$/ProjectName/ReleaseBranches/",
-                "INPUT_TARGETBRANCHES": "TargetBranch1,TargetBranch2,TargetBranch3",
                 "INPUT_TFSAPIVERSIONNUMBER": "2.0",
-                "INPUT_TFSTOKEN": "alphanumerictfstoken",
-                "INPUT_TFSURL": "https://accountName.visualstudio.com/ProjectName/"
+                "SYSTEM_ACCESSTOKEN": "alphanumerictfstoken",
+                "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI": "https://accountName.visualstudio.com/ProjectName/",
+                "SYSTEM_TEAMPROJECTID": "alphanumericprojectid"
             },
             "name": "Launch Program",
             "outputCapture": "std",
