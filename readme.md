@@ -38,8 +38,11 @@ Set up these two files in a `.vscode` folder at the root of the Git repository t
                 "SYSTEM_TEAMPROJECTID": "alphanumericprojectid"
             },
             "name": "Launch Program",
+            "outFiles": [
+                "${workspaceFolder}/src/output/**/*.js"
+            ],
             "outputCapture": "std",
-            "program": "${workspaceFolder}\\src\\index.js",
+            "program": "${workspaceFolder}\\src\\output\\TamaracBuildSynchronizer\\index.js",
             "request": "launch",
             "smartStep": true,
             "sourceMaps": true,
