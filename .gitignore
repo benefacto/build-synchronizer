@@ -10,6 +10,7 @@ output/
 *.d.ts
 config.json
 !gulpfile.js
+Thumbs.db
 
 [Tt]asks/**/*.js
 [Tt]ests/**/*.js
