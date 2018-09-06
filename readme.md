@@ -31,7 +31,7 @@ Set up these two files in a `.vscode` folder at the root of the Git repository t
                 "INPUT_BRANCHNAMETOKEN": "#(branchName)",
                 "INPUT_BRANCHPATHTOKEN": "#(branchPath)",
                 "INPUT_DEFNAMEPOSTFIX": "TEST",
-                "INPUT_FILEPATH": "C:/TokenizedBuildDefinitions/",
+                "INPUT_FILEPATH": "C:/TokenizedBuildDefinitions/*.json",
                 "INPUT_TFSAPIVERSIONNUMBER": "2.0",
                 "SYSTEM_ACCESSTOKEN": "alphanumerictfstoken",
                 "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI": "https://accountName.visualstudio.com/ProjectName/",
