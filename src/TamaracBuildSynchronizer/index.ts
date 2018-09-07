@@ -22,9 +22,12 @@ async function run() {
         let exitCode: number = await runner.exec();
         if (exitCode == 0) {
             syncBuildDefinitions().then(res =>
-                console.log('Task completed; exited with code: ' + exitCode + ' ')
+                console.log('Task completed; exited with code: ' + exitCode)
             ).catch(err =>
                 setResult(TaskResult.Failed, err.message));
+        }
+        else {
+            throw new Error('Task exited with code: ' + exitCode);
         }
     }
     catch (err) {

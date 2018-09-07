@@ -21,7 +21,7 @@ function _untokenizeJson(branchName: string, branchPath: string, json: string) {
 
 function _initBuildDefinition(json: string, buildDefPath: string, project: TeamProject) {
     let def: BuildDefinition = JSON.parse(json);
-    def.name += getInput('defnamepostfix', false);
+    def.name += getInput('defnamepostfix') ? getInput('defnamepostfix') : "";
     def.path = buildDefPath;
     def.project = {
         abbreviation: project.abbreviation,
@@ -36,7 +36,7 @@ function _initBuildDefinition(json: string, buildDefPath: string, project: TeamP
 }
 
 function _getBranchDependentPath(branchPath: string) {
-    let path: string = branchPath.replace(getInput('basetfvcpath'), '')
+    let path: string = branchPath.replace(getInput('basetfvcpath', true), '')
         .replace('/', '\\');
     return path;
 }
@@ -44,7 +44,7 @@ function _getBranchDependentPath(branchPath: string) {
 function _getFileNames(filePath: string) {
     let fileNames: string[] = glob.sync(filePath);
     if (fileNames == undefined || fileNames.length == 0) {
-        throw new Error('No files added');
+        throw new Error('No files found for path ' + filePath);
     }
     return fileNames;
 }
@@ -67,6 +67,7 @@ export async function syncBuildDefinitions() {
             await buildApi.getDefinitions(currentProject.id);
 
         for (const fileName of fileNames) {
+            console.log("Processing JSON file " + fileName);
             let json: string = readFileSync(fileName).toString();
             let buildDefPath: string =
                 _getBranchDependentPath(getVariable('BUILD_SOURCEBRANCH'));
@@ -74,8 +75,9 @@ export async function syncBuildDefinitions() {
             json = _untokenizeJson(
                 getVariable('BUILD_SOURCEBRANCHNAME'), getVariable('BUILD_SOURCEBRANCH'), json
             );
-            let def: BuildDefinition = _initBuildDefinition(
-                json, buildDefPath, currentProject);
+            let def: BuildDefinition =
+                _initBuildDefinition(json, buildDefPath, currentProject);
+            console.log("Build definition " + def.name + " intialized from JSON file");
 
             let result;
             let matchingBuildDef: BuildDefinitionReference =
@@ -83,9 +85,11 @@ export async function syncBuildDefinitions() {
             if (matchingBuildDef) {
                 def.id = matchingBuildDef.id;
                 result = await buildApi.deleteDefinition(def.id, currentProject.id);
+                console.log("Existing build definition " + def.name + " deleted");
             }
             result = await buildApi.createDefinition(def, currentProject.id);
-            console.log('Result of build definition operation is: \n' +
+            console.log("Build definition " + def.name + " created");
+            console.log('Resulting build definition is: \n' +
                 inspect(result, false, null));
         }
     }
