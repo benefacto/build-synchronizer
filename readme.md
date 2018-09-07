@@ -27,7 +27,7 @@ Set up these two files in a `.vscode` folder at the root of the Git repository t
             "env": {
                 "BUILD_SOURCEBRANCH": "$/ProjectName/FeatureBranches/Branch",
                 "BUILD_SOURCEBRANCHNAME": "Branch",
-                "INPUT_BASEBUILDDEFINITIONPATH": "\\\\",
+                "INPUT_BASETFVCPATH": "$/ProjectName",
                 "INPUT_BRANCHNAMETOKEN": "#(branchName)",
                 "INPUT_BRANCHPATHTOKEN": "#(branchPath)",
                 "INPUT_DEFNAMEPOSTFIX": "TEST",

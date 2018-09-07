@@ -7,7 +7,7 @@ import { getInput, getVariable, getTaskVariable, filePathSupplied } from 'vsts-t
 import { getPersonalAccessTokenHandler, getVersionHandler } from 'vso-node-api';
 import { inspect } from 'util';
 import { IRequestHandler } from 'vso-node-api/interfaces/common/VsoBaseInterfaces';
-import { lstatSync, readdirSync, readFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import { TeamProject } from 'vso-node-api/interfaces/CoreInterfaces';
 
 function _untokenizeJson(branchName: string, branchPath: string, json: string) {
@@ -36,15 +36,9 @@ function _initBuildDefinition(json: string, buildDefPath: string, project: TeamP
 }
 
 function _getBranchDependentPath(branchPath: string) {
-    if ((branchPath.toLowerCase()).indexOf('release') > -1) {
-        return "\\\\ReleaseBranches\\\\";
-    }
-    else if ((branchPath.toLowerCase()).indexOf('main') > -1) {
-        return "\\\\";
-    }
-    else {
-        return "\\\\FeatureBranches\\\\";
-    }
+    let path: string = branchPath.replace(getInput('basetfvcpath'), '')
+        .replace('/', '\\');
+    return path;
 }
 
 function _getFileNames(filePath: string) {
@@ -74,12 +68,12 @@ export async function syncBuildDefinitions() {
 
         for (const fileName of fileNames) {
             let json: string = readFileSync(fileName).toString();
-            let branchPath: string = getVariable('BUILD_SOURCEBRANCH');
             let buildDefPath: string =
-                _getBranchDependentPath(getVariable('BUILD_SOURCEBRANCHNAME')) +
-                getVariable('BUILD_SOURCEBRANCHNAME');
+                _getBranchDependentPath(getVariable('BUILD_SOURCEBRANCH'));
 
-            json = _untokenizeJson(getVariable('BUILD_SOURCEBRANCHNAME'), branchPath, json);
+            json = _untokenizeJson(
+                getVariable('BUILD_SOURCEBRANCHNAME'), getVariable('BUILD_SOURCEBRANCH'), json
+            );
             let def: BuildDefinition = _initBuildDefinition(
                 json, buildDefPath, currentProject);
 

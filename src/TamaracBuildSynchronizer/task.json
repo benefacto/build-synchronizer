@@ -9,7 +9,13 @@
         }
     },
     "friendlyName": "Tamarac Build Synchronizer",
-    "groups": [],
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
     "helpMarkDown": "",
     "id": "4c204bbe-9c88-4b57-ac83-d5726fa2ae54",
     "inputs": [
@@ -22,7 +28,17 @@
             "type": "string"
         },
         {
+            "defaultValue": "$/$(System.TeamProject)",
+            "groupName": "advanced",
+            "helpMarkDown": "Base TFVC path, defaults to $/$(System.TeamProject)",
+            "label": "Base TFVC Path",
+            "name": "basetfvcpath",
+            "required": false,
+            "type": "string"
+        },
+        {
             "defaultValue": "2.0",
+            "groupName": "advanced",
             "helpMarkDown": "Version of TFS API to use",
             "label": "TFS API Version Number",
             "name": "tfsapiversionnumber",
@@ -30,14 +46,7 @@
             "type": "string"
         },
         {
-            "defaultValue": "\\\\",
-            "helpMarkDown": "Base build definition path",
-            "label": "Base Path",
-            "name": "basebuilddefinitionpath",
-            "required": true,
-            "type": "string"
-        },
-        {
+            "defaultValue": "#(branchPath)",
             "helpMarkDown": "Branch TFVC path token to replace with Base TFVC Path plus Branch Name",
             "label": "Branch Path Token",
             "name": "branchpathtoken",
@@ -45,6 +54,7 @@
             "type": "string"
         },
         {
+            "defaultValue": "#(branchName)",
             "helpMarkDown": "Branch name token to replace in input JSON file",
             "label": "Branch Name Token",
             "name": "branchnametoken",

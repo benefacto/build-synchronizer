@@ -21,10 +21,10 @@ async function run() {
 
         let exitCode: number = await runner.exec();
         if (exitCode == 0) {
-            syncBuildDefinitions().then(
-                res => console.log('Task completed; exited with code: ' + exitCode)
-            ).catch(
-                err => setResult(TaskResult.Failed, err.message));
+            syncBuildDefinitions().then(res =>
+                console.log('Task completed; exited with code: ' + exitCode + ' ' + res)
+            ).catch(err =>
+                setResult(TaskResult.Failed, err.message));
         }
     }
     catch (err) {
