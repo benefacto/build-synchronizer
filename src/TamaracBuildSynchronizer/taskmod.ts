@@ -21,7 +21,6 @@ function _untokenizeJson(branchName: string, branchPath: string, json: string) {
 
 function _initBuildDefinition(json: string, buildDefPath: string, project: TeamProject) {
     let def: BuildDefinition = JSON.parse(json);
-    def.name += getInput('defnamepostfix') ? getInput('defnamepostfix') : "";
     def.path = buildDefPath;
     def.project = {
         abbreviation: project.abbreviation,

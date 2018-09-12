@@ -20,14 +20,6 @@
     "id": "4c204bbe-9c88-4b57-ac83-d5726fa2ae54",
     "inputs": [
         {
-            "defaultValue": "",
-            "helpMarkDown": "Optional postfix to append to names of created build definitions",
-            "label": "Definition Name Postfix",
-            "name": "defnamepostfix",
-            "required": false,
-            "type": "string"
-        },
-        {
             "defaultValue": "$/$(System.TeamProject)",
             "groupName": "advanced",
             "helpMarkDown": "Base TFVC path, defaults to $/$(System.TeamProject)",
@@ -72,8 +64,8 @@
     "instanceNameFormat": "Synchronize Build Definitions",
     "name": "TamaracBuildSynchronizer",
     "version": {
-        "Major": 2,
+        "Major": 3,
         "Minor": 0,
-        "Patch": 1
+        "Patch": 0
     }
 }
