@@ -14,7 +14,7 @@
             "type": "ms.vss-distributed-task.task"
         }
     ],
-    "description": "Build task to (re-)create VSTS build definitions for TFVC in TFS (2017 Update 2) from provided (directory of) tokenized JSON file(s)",
+    "description": "Build task to (re-)create VSTS build definitions for TFVC in TFS from provided (directory of) tokenized JSON file(s)",
     "files": [
         {
             "path": "output"

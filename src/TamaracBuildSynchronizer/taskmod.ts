@@ -1,14 +1,14 @@
 import * as escapeStringRegexp from 'escape-string-regexp';
 import * as glob from 'glob';
-import { BuildApi } from 'vso-node-api/BuildApi';
-import { BuildDefinition, BuildDefinitionReference } from 'vso-node-api/interfaces/BuildInterfaces';
-import { CoreApi } from 'vso-node-api/coreApi';
-import { getInput, getVariable, getTaskVariable, filePathSupplied } from 'vsts-task-lib/task';
-import { getPersonalAccessTokenHandler, getVersionHandler } from 'vso-node-api';
+import { BuildApi } from 'azure-devops-node-api/BuildApi';
+import { BuildDefinition, BuildDefinitionReference } from 'azure-devops-node-api/interfaces/BuildInterfaces';
+import { CoreApi } from 'azure-devops-node-api/coreApi';
+import { getInput, getVariable } from 'vsts-task-lib';
+import { getPersonalAccessTokenHandler } from 'azure-devops-node-api';
 import { inspect } from 'util';
-import { IRequestHandler } from 'vso-node-api/interfaces/common/VsoBaseInterfaces';
+import { IRequestHandler } from 'azure-devops-node-api/interfaces/common/VsoBaseInterfaces';
 import { readFileSync } from 'fs';
-import { TeamProject } from 'vso-node-api/interfaces/CoreInterfaces';
+import { TeamProject } from 'azure-devops-node-api/interfaces/CoreInterfaces';
 
 function _untokenizeJson(branchName: string, branchPath: string, json: string) {
     return json.replace(new RegExp(
@@ -22,15 +22,7 @@ function _untokenizeJson(branchName: string, branchPath: string, json: string) {
 function _initBuildDefinition(json: string, buildDefPath: string, project: TeamProject) {
     let def: BuildDefinition = JSON.parse(json);
     def.path = buildDefPath;
-    def.project = {
-        abbreviation: project.abbreviation,
-        description: project.description,
-        id: project.id,
-        name: project.name,
-        revision: project.revision,
-        state: project.state,
-        url: project.url
-    };
+    def.project = project;
     return def;
 }
 
@@ -52,7 +44,6 @@ export async function syncBuildDefinitions() {
     try {
         const handlers: IRequestHandler[] = [
             getPersonalAccessTokenHandler(getVariable('SYSTEM_ACCESSTOKEN')),
-            getVersionHandler(getInput('tfsapiversionnumber', true))
         ];
         const buildApi =
             new BuildApi(getVariable('SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'), handlers);
@@ -83,13 +74,15 @@ export async function syncBuildDefinitions() {
                 buildDefs.filter(m => m.name == def.name)[0];
             if (matchingBuildDef) {
                 def.id = matchingBuildDef.id;
-                result = await buildApi.deleteDefinition(def.id, currentProject.id);
-                console.log("Existing build definition " + def.name + " deleted");
+                result = await buildApi.updateDefinition(def, matchingBuildDef.id, currentProject.id);
+                console.log("Existing build definition " + matchingBuildDef.name + " updated");
             }
-            result = await buildApi.createDefinition(def, currentProject.id);
-            console.log("Build definition " + def.name + " created");
-            console.log('Resulting build definition is: \n' +
-                inspect(result, false, null));
+            else {
+                result = await buildApi.createDefinition(def, currentProject.id);
+                console.log("Build definition " + def.name + " created");
+                console.log('Resulting build definition is: \n' +
+                    inspect(result, false, null));
+            }
         }
     }
     catch (e) {
