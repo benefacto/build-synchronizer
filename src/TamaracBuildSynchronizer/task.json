@@ -2,7 +2,7 @@
     "$schema": "https://raw.githubusercontent.com/AArnott/vso-agent-tasks/9b41d803a/tasks.schema.json",
     "author": "Envestnet",
     "category": "Utility",
-    "description": "Build task to (re-)create VSTS build definitions for TFVC in TFS from provided (directory of) tokenized JSON file(s)",
+    "description": "Build task to create or update VSTS build definitions for TFVC in TFS from provided (directory of) tokenized JSON file(s)",
     "execution": {
         "Node": {
             "target": "index.js"

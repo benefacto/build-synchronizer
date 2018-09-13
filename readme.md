@@ -1,6 +1,6 @@
 # Tamarac Build Synchronizer - VSTS/TFS build extension
 
-This build extension is used to (re-)create VSTS build definitions for TFVC in TFS (2017 Update 2) from 
+This build extension is used to create or update VSTS build definitions for TFVC in TFS from 
 a provided tokenized JSON file or directory of tokenized files.
 
 ## Getting started
