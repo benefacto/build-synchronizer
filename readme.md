@@ -1,9 +1,9 @@
-# Tamarac Build Synchronizer - VSTS/TFS build extension
+# Tamarac Build Synchronizer - Azure DevOps build extension
 
-This build extension is used to create or update VSTS build definitions for TFVC in TFS from 
-a provided tokenized JSON file or directory of tokenized files.
+This build extension is used to create or update Team Foundation Version Control build definitions 
+in Azure DevOps Services from a provided JSON file(s).
 
-## Getting started
+## Running locally
 
 You will need to run npm install in the `src` folder to get started:
 
@@ -11,7 +11,7 @@ You will need to run npm install in the `src` folder to get started:
 npm install
 ```
 
-## Debugging
+## Debugging locally
 
 Set up these two files in a `.vscode` folder at the root of the Git repository to debug within Visual Studio Code:
 
@@ -47,7 +47,7 @@ Set up these two files in a `.vscode` folder at the root of the Git repository t
             "type": "node"
         }
     ],
-    "version": "0.2.0"
+    "version": "3.0.1"
 }
 ```
 
@@ -57,7 +57,7 @@ Set up these two files in a `.vscode` folder at the root of the Git repository t
 {
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
-    "version": "2.0.0",
+    "version": "3.0.1",
     "tasks": [
         {
             "type": "typescript",
@@ -77,17 +77,15 @@ Set up these two files in a `.vscode` folder at the root of the Git repository t
 
 Then run the build step by pressing `Ctrl+Shift+B`, and any updates will trigger a TypeScript build. Debug by pressing `F5`.
 
-## Packaging
+## Staging the files
 
-### Staging the files
-
-There is a `gulpfile.js` in the `src` directory that has a `rebuild` task that can be used to create the necessary files to create the build extension package. Run the following:
+There is a `gulpfile.js` in the `src` directory that has tasks that can be used to create the necessary files to create the build extension package. Run the following:
 
 ```bash
-gulp rebuild
+gulp clean; gulp build; gulp package;
 ```
 
-### Creating the VSIX package to publish
+## Publishing a new version of the build task
 
 First, install the `tfx-cli` tools:
 
@@ -98,7 +96,8 @@ npm install -g tfx-cli
 Then run the following from the `src` folder:
 
 ```bash
-tfx extension create --output-path <your_output_path>
+tfx build tasks delete <existing_task_id>
+tfx build tasks create --output-path <your_output_path>
 ```
 
-NOTE: The version specified in the [vss-extension.json](./src/vss-extension.json) will need to be incremented in order to publish to a VSTS/TFS gallery.
+NOTE: The version specified in the [vss-extension.json](./src/vss-extension.json) and [task.json](./src/TamaracBuildSynchronizer/task.json) will need to be incremented in order to publish.
