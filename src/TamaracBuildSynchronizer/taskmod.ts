@@ -74,15 +74,16 @@ export async function syncBuildDefinitions() {
                 buildDefs.filter(m => m.name == def.name)[0];
             if (matchingBuildDef) {
                 def.id = matchingBuildDef.id;
+                def.revision = matchingBuildDef.revision;
                 result = await buildApi.updateDefinition(def, matchingBuildDef.id, currentProject.id);
                 console.log("Existing build definition " + matchingBuildDef.name + " updated");
             }
             else {
                 result = await buildApi.createDefinition(def, currentProject.id);
                 console.log("Build definition " + def.name + " created");
-                console.log('Resulting build definition is: \n' +
-                    inspect(result, false, null));
             }
+            console.log('Resulting build definition is: \n' +
+            inspect(result, false, null));
         }
     }
     catch (e) {
