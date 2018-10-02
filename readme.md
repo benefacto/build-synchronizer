@@ -96,7 +96,7 @@ npm install -g tfx-cli
 Then run the following from the `src` folder:
 
 ```bash
-tfx build tasks upload --output-path <your_output_path>
+tfx build tasks upload --task-path <your_output_path>
 ```
 
 NOTE: The version specified in the [vss-extension.json](./src/vss-extension.json) and [task.json](./src/TamaracBuildSynchronizer/task.json) will need to be incremented in order to publish.
