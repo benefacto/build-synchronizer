@@ -11,7 +11,7 @@
   "dependencies": {
     "@types/escape-string-regexp": "^1.0.0",
     "@types/glob": "^5.0.35",
-    "azure-devops-node-api": "^6.5.0",
+    "azure-devops-node-api": "^12.0.0",
     "del": "^3.0.0",
     "escape-string-regexp": "^1.0.5",
     "glob": "^7.1.3",
